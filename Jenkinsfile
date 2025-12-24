@@ -26,10 +26,11 @@ pipeline {
     stage('Deploy') {
       steps {
         sh '''
-          cd /home/ycieza/infra/docker
-          ENV_FILE=${ENV_FILE} TAG=${TAG} docker compose up -d --build
+          cd /infra/docker
+          ENV_FILE=env/qa.env TAG=qa docker compose up -d --build
         '''
       }
     }
+
   }
 }
