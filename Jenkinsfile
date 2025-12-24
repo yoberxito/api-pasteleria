@@ -15,26 +15,20 @@ pipeline {
       }
     }
 
-    stage('Build JAR') {
-      steps {
-        sh 'mvn clean package -DskipTests'
-      }
-    }
-
     stage('Build Docker Image') {
       steps {
-        sh """
+        sh '''
           docker build -t ${IMAGE_NAME}:${TAG} .
-        """
+        '''
       }
     }
 
     stage('Deploy') {
       steps {
-        sh """
+        sh '''
           cd /home/ycieza/infra/docker
-          ENV_FILE=${ENV_FILE} TAG=${TAG} docker compose up -d
-        """
+          ENV_FILE=${ENV_FILE} TAG=${TAG} docker compose up -d --build
+        '''
       }
     }
   }
