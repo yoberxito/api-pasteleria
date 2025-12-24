@@ -27,7 +27,7 @@ pipeline {
       steps {
         sh '''
           cd /infra/docker
-          ENV_FILE=env/qa.env TAG=qa docker compose up -d --build
+          ENV_FILE=env/qa.env TAG=qa docker-compose up -d --build
         '''
       }
     }
