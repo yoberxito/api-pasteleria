@@ -22,7 +22,7 @@ pipeline {
       steps {
         sh '''
           cd ${COMPOSE_DIR}
-          docker compose up -d --no-deps api-pasteleria
+          docker-compose up -d --no-deps ${SERVICE_NAME}
         '''
       }
     }
