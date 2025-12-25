@@ -4,15 +4,11 @@ pipeline {
   environment {
     IMAGE_NAME = "api-pasteleria"
     TAG = "qa"
-    ENV_FILE = "env/qa.env"
+    COMPOSE_DIR = "/infra/docker"
+    SERVICE_NAME = "api-pasteleria"
   }
 
   stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
-    }
 
     stage('Build Docker Image') {
       steps {
@@ -22,15 +18,23 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Deploy API') {
       steps {
         sh '''
-          cd /infra/docker
-          docker-compose down
-          docker-compose up -d
+          cd ${COMPOSE_DIR}
+          docker-compose up -d --no-deps ${SERVICE_NAME}
         '''
       }
     }
 
+  }
+
+  post {
+    success {
+      echo "✅ API desplegada correctamente"
+    }
+    failure {
+      echo "❌ Error en el despliegue"
+    }
   }
 }
