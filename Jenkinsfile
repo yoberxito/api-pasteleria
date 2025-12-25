@@ -4,8 +4,6 @@ pipeline {
   environment {
     IMAGE_NAME = "api-pasteleria"
     TAG = "qa"
-    COMPOSE_DIR = "/infra/docker"
-    SERVICE_NAME = "api-pasteleria"
   }
 
   stages {
@@ -18,23 +16,11 @@ pipeline {
       }
     }
 
-    stage('Deploy API') {
+    stage('Build Finished') {
       steps {
-        sh '''
-          cd ${COMPOSE_DIR}
-          docker-compose up -d --no-deps ${SERVICE_NAME}
-        '''
+        echo "✅ Imagen ${IMAGE_NAME}:${TAG} construida correctamente"
       }
     }
 
-  }
-
-  post {
-    success {
-      echo "✅ API desplegada correctamente"
-    }
-    failure {
-      echo "❌ Error en el despliegue"
-    }
   }
 }
