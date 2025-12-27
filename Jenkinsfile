@@ -18,8 +18,7 @@ pipeline {
 
         stage('Deploy to Docker Compose') {
             steps {
-                // Este comando apaga el contenedor viejo y levanta el nuevo con la imagen que acabamos de crear
-                sh "docker compose -f ${DOCKER_COMPOSE_PATH} up -d --build api-pasteleria"
+                sh "docker-compose -f ${DOCKER_COMPOSE_PATH} up -d --build api-pasteleria"
             }
         }
 
