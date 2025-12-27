@@ -18,8 +18,8 @@ pipeline {
 
         stage('Deploy to Docker Compose') {
             steps {
-                // Usamos el comando envuelto en comillas simples para evitar errores de interpretación
-                sh 'docker compose -f /infra/docker/docker-compose.yml up -d --build api-pasteleria'
+                // Llamamos directamente al plugin de Docker para evitar confusiones de flags
+                sh 'docker-compose -f /infra/docker/docker-compose.yml up -d --build api-pasteleria'
             }
         }
         stage('Build Finished') {
