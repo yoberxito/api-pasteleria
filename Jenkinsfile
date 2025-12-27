@@ -17,10 +17,11 @@ pipeline {
         }
 
         stage('Deploy to Docker Compose') {
-            steps {
-                sh "docker-compose -f ${DOCKER_COMPOSE_PATH} up -d --build api-pasteleria"
-            }
-        }
+                    steps {
+                        // Usamos "docker compose" sin guion, que es el estándar actual
+                        sh "docker compose -f ${DOCKER_COMPOSE_PATH} up -d --build api-pasteleria"
+                    }
+                }
 
         stage('Build Finished') {
             steps {
