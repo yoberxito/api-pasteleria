@@ -17,12 +17,11 @@ pipeline {
         }
 
         stage('Deploy to Docker Compose') {
-                    steps {
-                        // Usamos "docker compose" sin guion, que es el estándar actual
-                        sh "docker compose -f ${DOCKER_COMPOSE_PATH} up -d --build api-pasteleria"
-                    }
-                }
-
+            steps {
+                // Usamos el comando envuelto en comillas simples para evitar errores de interpretación
+                sh 'docker compose -f /infra/docker/docker-compose.yml up -d --build api-pasteleria'
+            }
+        }
         stage('Build Finished') {
             steps {
                 echo "✅ API actualizada y desplegada correctamente en https://api-pasteleria.yccweb.uk"
