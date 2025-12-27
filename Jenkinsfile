@@ -18,8 +18,8 @@ pipeline {
 
         stage('Deploy to Docker Compose') {
             steps {
-                // Llamamos directamente al plugin de Docker para evitar confusiones de flags
-                sh 'docker-compose -f /infra/docker/docker-compose.yml up -d --build api-pasteleria'
+                // Usamos la ruta absoluta al binario que acabamos de instalar
+                sh "/usr/local/bin/docker-compose -f /infra/docker/docker-compose.yml up -d --build api-pasteleria"
             }
         }
         stage('Build Finished') {
