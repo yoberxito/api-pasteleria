@@ -1,31 +1,60 @@
 pipeline {
     agent any
 
+    // 🔔 Trigger automático por GitHub Webhook
+    triggers {
+        githubPush()
+    }
+
     environment {
         IMAGE_NAME = "api-pasteleria"
         TAG = "qa"
-        // Ruta dentro del contenedor Jenkins donde mapeamos tu infra
-        DOCKER_COMPOSE_PATH = "/infra/docker/docker-compose.yml"
+
+        // Ruta ABSOLUTA donde Jenkins ve tu infra (volumen montado)
+        DOCKER_COMPOSE_FILE = "/infra/docker/docker-compose.yml"
     }
 
     stages {
-        stage('Build Docker Image') {
+
+        stage('Checkout') {
             steps {
-                // Construye la nueva imagen con los cambios de GitHub
-                sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+                // Asegura que el código correcto esté en el workspace
+                checkout scm
             }
         }
 
-        stage('Deploy to Docker Compose') {
+        stage('Build Docker Image') {
             steps {
-                // Usamos la ruta absoluta al binario que acabamos de instalar
-                sh "/usr/local/bin/docker-compose -f /infra/docker/docker-compose.yml up -d --build api-pasteleria"
+                echo "🐳 Construyendo imagen Docker ${IMAGE_NAME}:${TAG}"
+                sh """
+                  docker build -t ${IMAGE_NAME}:${TAG} .
+                """
             }
         }
-        stage('Build Finished') {
+
+        stage('Deploy with Docker Compose') {
             steps {
-                echo "✅ API actualizada y desplegada correctamente en https://api-pasteleria.yccweb.uk"
+                echo "🚀 Desplegando API con Docker Compose"
+                sh """
+                  docker compose -f ${DOCKER_COMPOSE_FILE} up -d --build api-pasteleria
+                """
             }
+        }
+
+        stage('Finished') {
+            steps {
+                echo "✅ API actualizada y desplegada correctamente"
+                echo "🌐 https://api-pasteleria.yccweb.uk"
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo "❌ El despliegue falló. Revisa los logs del pipeline."
+        }
+        success {
+            echo "🎉 Deploy exitoso"
         }
     }
 }
