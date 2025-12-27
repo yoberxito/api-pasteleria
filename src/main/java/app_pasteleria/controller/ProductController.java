@@ -86,7 +86,6 @@ public class ProductController {
                 productService.createVariant(productId, label, price, portionsText, sku)
         );
     }
-
     @GetMapping("/categories")
     public ResponseEntity<?> getAllCategories() {
         return ResponseEntity.ok(productService.getAllCategories());
